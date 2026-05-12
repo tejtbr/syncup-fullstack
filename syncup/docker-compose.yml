@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: syncup-postgres
+    environment:
+      POSTGRES_DB: syncup_db
+      POSTGRES_USER: syncup_user
+      POSTGRES_PASSWORD: syncup_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U syncup_user -d syncup_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: syncup-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  presence-service:
+    build: ./syncup-presence-service
+    container_name: syncup-presence-service
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/syncup_db
+      SPRING_DATASOURCE_USERNAME: syncup_user
+      SPRING_DATASOURCE_PASSWORD: syncup_pass
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+      JWT_SECRET: syncup-super-secret-jwt-key-change-in-production-min-256-bits
+      JWT_EXPIRATION: 86400000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build: ./syncup-frontend
+    container_name: syncup-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - presence-service
+
+volumes:
+  postgres_data:

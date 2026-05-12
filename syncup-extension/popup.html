@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SyncUp</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      width: 360px;
+      min-height: 200px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 13px;
+      background: #F8FAFC;
+      color: #1E293B;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: #1E293B;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-left { display: flex; align-items: center; gap: 8px; }
+    .logo { font-size: 16px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+    .logo span { color: #60A5FA; }
+    .user-name { font-size: 11px; color: #94A3B8; }
+    .logout-btn {
+      background: none; border: none; cursor: pointer;
+      font-size: 10px; color: #64748B; padding: 4px 8px;
+      border-radius: 4px; transition: background 0.15s;
+    }
+    .logout-btn:hover { background: rgba(255,255,255,0.1); color: #94A3B8; }
+
+    /* ── Views ── */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* ── Login View ── */
+    #login-view { padding: 24px 20px; }
+    #login-view h2 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    #login-view p  { font-size: 11px; color: #64748B; margin-bottom: 18px; }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 11px; font-weight: 500; color: #475569; margin-bottom: 4px; }
+    .form-group input {
+      width: 100%; padding: 8px 10px; border: 1px solid #CBD5E1;
+      border-radius: 6px; font-size: 12px; outline: none;
+      transition: border-color 0.15s;
+    }
+    .form-group input:focus { border-color: #3B82F6; }
+    .login-btn {
+      width: 100%; padding: 9px; background: #2563EB; color: #fff;
+      border: none; border-radius: 6px; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: background 0.15s; margin-top: 4px;
+    }
+    .login-btn:hover { background: #1D4ED8; }
+    .login-btn:disabled { background: #93C5FD; cursor: not-allowed; }
+    .error-msg { font-size: 11px; color: #EF4444; margin-top: 8px; text-align: center; }
+
+    /* ── Main View ── */
+    #main-view { padding-bottom: 4px; }
+
+    /* Date bar */
+    .date-bar {
+      background: #EFF6FF; padding: 8px 16px;
+      font-size: 11px; color: #3B82F6; font-weight: 500;
+      border-bottom: 1px solid #DBEAFE;
+    }
+
+    /* Status section */
+    .section { padding: 12px 16px; }
+    .section-title {
+      font-size: 10px; font-weight: 700; color: #94A3B8;
+      text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px;
+    }
+
+    /* Status buttons */
+    .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .status-btn {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 4px; padding: 10px 8px; border-radius: 10px;
+      border: 2px solid transparent; cursor: pointer;
+      background: #fff; transition: all 0.15s; font-family: inherit;
+    }
+    .status-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .status-btn .icon  { font-size: 22px; }
+    .status-btn .label { font-size: 11px; font-weight: 600; }
+    .status-btn .sub   { font-size: 9px; color: #94A3B8; }
+
+    .status-btn.in-office  { border-color: #D1FAE5; background: #F0FDF4; }
+    .status-btn.remote     { border-color: #DBEAFE; background: #EFF6FF; }
+    .status-btn.on-leave   { border-color: #FEF3C7; background: #FFFBEB; }
+    .status-btn.undecided  { border-color: #E2E8F0; background: #F8FAFC; }
+
+    .status-btn.active.in-office  { border-color: #10B981; background: #ECFDF5; box-shadow: 0 0 0 3px #A7F3D0; }
+    .status-btn.active.remote     { border-color: #3B82F6; background: #EFF6FF; box-shadow: 0 0 0 3px #BFDBFE; }
+    .status-btn.active.on-leave   { border-color: #F59E0B; background: #FFFBEB; box-shadow: 0 0 0 3px #FDE68A; }
+    .status-btn.active.undecided  { border-color: #64748B; background: #F1F5F9; box-shadow: 0 0 0 3px #CBD5E1; }
+
+    /* Location picker */
+    #location-wrap { margin-top: 10px; display: none; }
+    #location-wrap select {
+      width: 100%; padding: 7px 10px; border: 1px solid #CBD5E1;
+      border-radius: 6px; font-size: 12px; background: #fff;
+      color: #1E293B; outline: none;
+    }
+    #location-wrap select:focus { border-color: #3B82F6; }
+
+    /* Note input */
+    .note-wrap { margin-top: 8px; }
+    .note-wrap input {
+      width: 100%; padding: 7px 10px; border: 1px solid #E2E8F0;
+      border-radius: 6px; font-size: 11px; background: #fff; outline: none;
+    }
+    .note-wrap input:focus { border-color: #3B82F6; }
+
+    /* Saving indicator */
+    .saving-bar {
+      font-size: 10px; color: #3B82F6; text-align: center;
+      padding: 4px; display: none; animation: pulse 1s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    /* Divider */
+    .divider { height: 1px; background: #E2E8F0; margin: 0 16px; }
+
+    /* Team summary */
+    .team-section { padding: 12px 16px; }
+    .team-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .refresh-btn {
+      background: none; border: none; cursor: pointer; font-size: 13px;
+      color: #94A3B8; padding: 2px; transition: transform 0.3s;
+    }
+    .refresh-btn:hover { transform: rotate(180deg); color: #3B82F6; }
+    .refresh-btn.spinning { animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Org summary pills */
+    .summary-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+    .pill {
+      display: flex; align-items: center; gap: 4px;
+      padding: 3px 8px; border-radius: 20px; font-size: 10px; font-weight: 600;
+    }
+    .pill .dot { width: 6px; height: 6px; border-radius: 50%; }
+    .pill.in  { background: #ECFDF5; color: #059669; }
+    .pill.in .dot  { background: #10B981; }
+    .pill.rem { background: #EFF6FF; color: #2563EB; }
+    .pill.rem .dot { background: #3B82F6; }
+    .pill.lea { background: #FFFBEB; color: #D97706; }
+    .pill.lea .dot { background: #F59E0B; }
+    .pill.und { background: #F1F5F9; color: #64748B; }
+    .pill.und .dot { background: #94A3B8; }
+
+    /* Member list */
+    .member-list { display: flex; flex-direction: column; gap: 6px; max-height: 180px; overflow-y: auto; }
+    .member-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 8px; background: #fff; border-radius: 8px;
+      border: 1px solid #F1F5F9;
+    }
+    .avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: #2563EB; color: #fff; font-size: 10px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .member-info { flex: 1; min-width: 0; }
+    .member-name  { font-size: 11px; font-weight: 600; color: #1E293B; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .member-dept  { font-size: 9px; color: #94A3B8; }
+    .status-badge {
+      font-size: 9px; font-weight: 600; padding: 2px 7px;
+      border-radius: 10px; white-space: nowrap; flex-shrink: 0;
+    }
+    .badge-IN_OFFICE  { background: #ECFDF5; color: #059669; }
+    .badge-REMOTE     { background: #EFF6FF; color: #2563EB; }
+    .badge-ON_LEAVE   { background: #FFFBEB; color: #D97706; }
+    .badge-UNDECIDED  { background: #F1F5F9; color: #64748B; }
+    .badge-NOT_SET    { background: #F1F5F9; color: #CBD5E1; }
+
+    .no-team-msg { font-size: 11px; color: #94A3B8; text-align: center; padding: 16px 0; }
+
+    /* Footer */
+    .footer {
+      padding: 8px 16px; display: flex; align-items: center;
+      justify-content: space-between; border-top: 1px solid #F1F5F9;
+    }
+    .footer a {
+      font-size: 10px; color: #3B82F6; text-decoration: none;
+    }
+    .footer a:hover { text-decoration: underline; }
+    .last-sync { font-size: 10px; color: #CBD5E1; }
+
+    /* Loading skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.2s infinite;
+      border-radius: 4px; height: 10px;
+    }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    /* Scrollbar */
+    .member-list::-webkit-scrollbar { width: 4px; }
+    .member-list::-webkit-scrollbar-track { background: #F8FAFC; }
+    .member-list::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+  <!-- ── LOGIN VIEW ── -->
+  <div id="login-view" class="view active">
+    <div style="text-align:center; margin-bottom:20px;">
+      <div style="font-size:28px; font-weight:800; color:#2563EB;">SyncUp</div>
+      <div style="font-size:11px; color:#94A3B8; margin-top:2px;">Hybrid Presence for your team</div>
+    </div>
+    <div class="form-group">
+      <label>Work Email</label>
+      <input type="email" id="email-input" placeholder="you@company.com" />
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="password-input" placeholder="••••••••" />
+    </div>
+    <button class="login-btn" id="login-btn">Sign In</button>
+    <div class="error-msg" id="login-error"></div>
+  </div>
+
+  <!-- ── MAIN VIEW ── -->
+  <div id="main-view" class="view">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="header-left">
+        <div class="logo">Sync<span>Up</span></div>
+        <div class="user-name" id="user-display"></div>
+      </div>
+      <button class="logout-btn" id="logout-btn">Sign out</button>
+    </div>
+
+    <!-- Date -->
+    <div class="date-bar" id="date-bar"></div>
+
+    <!-- Status Picker -->
+    <div class="section">
+      <div class="section-title">What's your plan today?</div>
+      <div class="status-grid">
+        <button class="status-btn in-office" data-status="IN_OFFICE">
+          <span class="icon">🏢</span>
+          <span class="label">In Office</span>
+          <span class="sub">At the office</span>
+        </button>
+        <button class="status-btn remote" data-status="REMOTE">
+          <span class="icon">🏠</span>
+          <span class="label">Remote</span>
+          <span class="sub">Working from home</span>
+        </button>
+        <button class="status-btn on-leave" data-status="ON_LEAVE">
+          <span class="icon">🌴</span>
+          <span class="label">On Leave</span>
+          <span class="sub">Out of office</span>
+        </button>
+        <button class="status-btn undecided" data-status="UNDECIDED">
+          <span class="icon">🤔</span>
+          <span class="label">Undecided</span>
+          <span class="sub">Not sure yet</span>
+        </button>
+      </div>
+
+      <!-- Office location (shown when IN_OFFICE) -->
+      <div id="location-wrap">
+        <select id="location-select">
+          <option value="">Select office location…</option>
+        </select>
+      </div>
+
+      <!-- Optional note -->
+      <div class="note-wrap">
+        <input type="text" id="note-input" placeholder="Add a note… (optional)" maxlength="200" />
+      </div>
+
+      <div class="saving-bar" id="saving-bar">⏳ Saving status…</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Team Summary -->
+    <div class="team-section">
+      <div class="team-header">
+        <div class="section-title" style="margin-bottom:0">Team Today</div>
+        <button class="refresh-btn" id="refresh-btn" title="Refresh">↻</button>
+      </div>
+
+      <!-- Org summary pills -->
+      <div class="summary-pills" id="summary-pills">
+        <div class="skeleton" style="width:70px; height:20px; border-radius:10px;"></div>
+        <div class="skeleton" style="width:60px; height:20px; border-radius:10px;"></div>
+        <div class="skeleton" style="width:65px; height:20px; border-radius:10px;"></div>
+      </div>
+
+      <!-- Member list -->
+      <div class="member-list" id="member-list">
+        <div class="skeleton" style="height:40px; border-radius:8px;"></div>
+        <div class="skeleton" style="height:40px; border-radius:8px; margin-top:6px;"></div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <a href="http://localhost:5173" target="_blank">Open SyncUp ↗</a>
+      <div class="last-sync" id="last-sync"></div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
