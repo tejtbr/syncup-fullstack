@@ -1,3 +1,4 @@
+import axios from 'axios'
 import api from './client'
 
 // --- Status ---
@@ -50,3 +51,37 @@ export const userApi = {
   getMe: () =>
     api.get('/api/users/me').then(r => r.data.data),
 }
+
+// --- Analytics (port 8081) ---
+const analyticsApi = axios.create({
+  baseURL: import.meta.env.VITE_ANALYTICS_URL || 'http://localhost:8081',
+  headers: { 'Content-Type': 'application/json' },
+});
+analyticsApi.interceptors.request.use(config => {
+  const token = localStorage.getItem('syncup_token');
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+export const analyticsApiCalls = {
+  getDepartmentStats: (date) =>
+    analyticsApi.get('/api/analytics/department', { params: { date } }).then(r => r.data.data),
+
+  getDepartmentRange: (from, to) =>
+    analyticsApi.get('/api/analytics/department/range', { params: { from, to } }).then(r => r.data.data),
+
+  getLocationStats: (date) =>
+    analyticsApi.get('/api/analytics/location', { params: { date } }).then(r => r.data.data),
+
+  getPeopleAtLocation: (locationId, date) =>
+    analyticsApi.get(`/api/analytics/location/${locationId}/people`, { params: { date } }).then(r => r.data.data),
+
+  getLocationTrend: (from, to) =>
+    analyticsApi.get('/api/analytics/location/trend', { params: { from, to } }).then(r => r.data.data),
+
+  getWeeklyTrends: (weeks = 4) =>
+    analyticsApi.get('/api/analytics/trends', { params: { weeks } }).then(r => r.data.data),
+
+  getOrgSummary: (date) =>
+    analyticsApi.get('/api/analytics/summary', { params: { date } }).then(r => r.data.data),
+};

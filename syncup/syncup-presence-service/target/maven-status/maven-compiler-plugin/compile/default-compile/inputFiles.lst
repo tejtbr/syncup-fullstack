@@ -2,6 +2,8 @@
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/model/User.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/exception/GlobalExceptionHandler.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/model/OfficeLocation.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/event/StatusUpdatedEvent.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/config/KafkaProducerConfig.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/repository/TeamMemberRepository.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/config/WebSocketConfig.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/dto/OfficeLocationDto.java

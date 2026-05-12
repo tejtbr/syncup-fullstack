@@ -1,0 +1,16 @@
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-analytics-service/src/main/java/com/syncup/analytics/AnalyticsServiceApplication.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-analytics-service/src/main/java/com/syncup/analytics/dto/DailyTrend.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-analytics-service/src/main/java/com/syncup/analytics/config/CorsConfig.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-analytics-service/src/main/java/com/syncup/analytics/dto/ApiResponse.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-analytics-service/src/main/java/com/syncup/analytics/config/KafkaConfig.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-analytics-service/src/main/java/com/syncup/analytics/dto/DepartmentStat.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-analytics-service/src/main/java/com/syncup/analytics/consumer/StatusUpdatedEvent.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-analytics-service/src/main/java/com/syncup/analytics/dto/LocationStat.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-analytics-service/src/main/java/com/syncup/analytics/dto/LocationTrendPoint.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-analytics-service/src/main/java/com/syncup/analytics/model/DailyPresenceSnapshot.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-analytics-service/src/main/java/com/syncup/analytics/consumer/StatusEventConsumer.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-analytics-service/src/main/java/com/syncup/analytics/controller/AnalyticsController.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-analytics-service/src/main/java/com/syncup/analytics/repository/SnapshotRepository.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-analytics-service/src/main/java/com/syncup/analytics/dto/PersonAtLocation.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-analytics-service/src/main/java/com/syncup/analytics/service/SnapshotService.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-analytics-service/src/main/java/com/syncup/analytics/dto/OrgSummary.java

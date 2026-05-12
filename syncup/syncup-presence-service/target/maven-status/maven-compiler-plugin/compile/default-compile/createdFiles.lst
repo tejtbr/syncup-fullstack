@@ -1,4 +1,5 @@
 com/syncup/presence/dto/StatusDtos$StatusResponse.class
+com/syncup/presence/config/KafkaProducerConfig.class
 com/syncup/presence/dto/TeamDtos.class
 com/syncup/presence/dto/StatusDtos$SetStatusRequest.class
 com/syncup/presence/model/User.class
@@ -26,6 +27,7 @@ com/syncup/presence/controller/TeamController.class
 com/syncup/presence/security/UserDetailsServiceImpl.class
 com/syncup/presence/dto/TeamDtos$TeamResponse.class
 com/syncup/presence/repository/TeamRepository.class
+com/syncup/presence/event/StatusUpdatedEvent$StatusUpdatedEventBuilder.class
 com/syncup/presence/model/OfficeLocation.class
 com/syncup/presence/dto/UserDto$UserDtoBuilder.class
 com/syncup/presence/PresenceServiceApplication.class
@@ -51,6 +53,7 @@ com/syncup/presence/dto/StatusDtos.class
 com/syncup/presence/model/TeamMember$TeamMemberRole.class
 com/syncup/presence/dto/UserDto.class
 com/syncup/presence/security/JwtUtil.class
+com/syncup/presence/event/StatusUpdatedEvent.class
 com/syncup/presence/dto/TeamDtos$TeamMemberDto$TeamMemberDtoBuilder.class
 com/syncup/presence/dto/StatusDtos$MemberStatusDto.class
 com/syncup/presence/dto/AuthDtos$RegisterRequest.class
