@@ -1,0 +1,57 @@
+sequenceDiagram
+    participant Client as React Client
+    participant AuthCtrl as Auth Controller
+    participant AuthSvc as Auth Service
+    participant JwtUtil as JWT Utility
+    participant Filter as JWT Auth Filter
+    participant StatusCtrl as Protected Endpoint
+    
+    Note over Client,StatusCtrl: Step 1: Authentication
+    
+    Client->>AuthCtrl: POST /api/auth/login<br/>{email, password}
+    AuthCtrl->>AuthSvc: Validate credentials
+    AuthSvc->>JwtUtil: generateToken(userDetails)
+    
+    Note over JwtUtil: Sign JWT with:<br/>- Username (email)<br/>- Expiration (24hrs)<br/>- Secret key (HS256)
+    
+    JwtUtil->>AuthSvc: JWT Token String
+    AuthSvc->>Client: 200 OK {token: "eyJ..."}
+    Client->>Client: localStorage.setItem('syncup_token')
+    
+    Note over Client,StatusCtrl: Step 2: Using Token
+    
+    Client->>Client: Prepare next request
+    Client->>Client: Read token from localStorage
+    Client->>Client: Add header:<br/>Authorization: Bearer eyJ...
+    
+    Client->>Filter: Request with JWT in header
+    
+    Note over Filter: JWT Validation
+    
+    Filter->>JwtUtil: extractUsername(token)
+    JwtUtil->>JwtUtil: Parse JWT<br/>Verify signature<br/>Check expiration
+    
+    alt Token Valid
+        JwtUtil->>Filter: username/email
+        Filter->>Filter: Load UserDetails
+        Filter->>Filter: Set SecurityContext
+        Filter->>StatusCtrl: Pass through
+        StatusCtrl->>Client: 200 OK {data}
+    else Token Invalid/Expired
+        JwtUtil->>Filter: Exception
+        Filter->>Client: 401 Unauthorized
+        Client->>Client: localStorage.removeItem('syncup_token')
+        Client->>Client: Redirect to /login
+    end
+    
+    Note over Client,StatusCtrl: Step 3: WebSocket Connection
+    
+    Client->>Client: Connect to WebSocket
+    Client->>Client: Send header:<br/>Authorization: Bearer eyJ...
+    
+    Note over Filter: WebSocket JWT Validation<br/>Similar to HTTP filter
+    
+    Filter->>JwtUtil: Validate token
+    JwtUtil->>Filter: Valid
+    Filter->>StatusCtrl: Allow subscription
+    StatusCtrl->>Client: Subscribe to /topic/status

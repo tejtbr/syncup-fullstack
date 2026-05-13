@@ -1,0 +1,61 @@
+graph TB
+    subgraph Client["🌐 Client Tier"]
+        UI["React Frontend<br/>Vite + Tailwind CSS<br/>@localhost:3000"]
+        EXT["Browser Extension<br/>Popup Notifications"]
+    end
+    
+    subgraph API["🔌 API Gateway / Services"]
+        AUTH["Authentication Service<br/>JWT-based"]
+        STATUS["Status Management Service<br/>REST + WebSocket"]
+        TEAM["Team Management Service<br/>REST API"]
+        VIBE["VibeCheck Service<br/>Mood Analytics"]
+        ANALYTICS["Analytics Service<br/>Reports & Metrics"]
+    end
+    
+    subgraph Cache["💾 Cache & Session"]
+        REDIS["Redis Cache<br/>Session Store<br/>Status Cache"]
+    end
+    
+    subgraph Data["📊 Data Tier"]
+        DB["PostgreSQL<br/>Users, Teams, Status<br/>Office Locations"]
+    end
+    
+    subgraph RealTime["⚡ Real-time Communication"]
+        WS["WebSocket/STOMP<br/>Live Status Updates<br/>Notifications"]
+    end
+    
+    subgraph Infra["🐳 Infrastructure"]
+        COMPOSE["Docker Compose<br/>Multi-container<br/>Orchestration"]
+    end
+    
+    UI -->|HTTP/HTTPS| AUTH
+    UI -->|HTTP/HTTPS| STATUS
+    UI -->|HTTP/HTTPS| TEAM
+    UI -->|HTTP/HTTPS| VIBE
+    UI -->|WebSocket| WS
+    EXT -->|Polling| STATUS
+    
+    AUTH -->|Validate| REDIS
+    STATUS -->|Query/Cache| REDIS
+    STATUS -->|Publish| WS
+    
+    AUTH -->|Query/Insert| DB
+    STATUS -->|Query/Insert| DB
+    TEAM -->|Query/Insert| DB
+    VIBE -->|Query| DB
+    ANALYTICS -->|Query| DB
+    
+    WS -->|Subscribe| UI
+    
+    COMPOSE -->|Manages| AUTH
+    COMPOSE -->|Manages| STATUS
+    COMPOSE -->|Manages| TEAM
+    COMPOSE -->|Manages| REDIS
+    COMPOSE -->|Manages| DB
+    
+    style Client fill:#e1f5ff
+    style API fill:#fff3e0
+    style Cache fill:#f3e5f5
+    style Data fill:#e8f5e9
+    style RealTime fill:#fce4ec
+    style Infra fill:#f5f5f5

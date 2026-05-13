@@ -1,0 +1,32 @@
+sequenceDiagram
+    participant User as User
+    participant UI as React Frontend
+    participant AuthCtrl as Auth Controller
+    participant AuthSvc as Auth Service
+    participant UserRepo as User Repository
+    participant JwtUtil as JWT Utility
+    participant DB as PostgreSQL
+    
+    User->>UI: Enter credentials (Email, Password)
+    UI->>AuthCtrl: POST /api/auth/login
+    AuthCtrl->>AuthSvc: login(email, password)
+    
+    AuthSvc->>UserRepo: Find user by email
+    UserRepo->>DB: SELECT * FROM users
+    DB->>UserRepo: User data
+    
+    AuthSvc->>AuthSvc: Validate password with BCrypt
+    
+    alt Password Valid
+        AuthSvc->>JwtUtil: generateToken(userDetails)
+        JwtUtil->>JwtUtil: Create JWT with<br/>claims & expiration
+        JwtUtil->>AuthSvc: Return JWT token
+        AuthSvc->>AuthCtrl: AuthResponse(token, user)
+        AuthCtrl->>UI: 200 OK {token, user}
+        UI->>UI: localStorage.setItem('syncup_token')
+        UI->>User: Redirect to Dashboard
+    else Password Invalid
+        AuthSvc->>AuthCtrl: Throw BadCredentialsException
+        AuthCtrl->>UI: 401 Unauthorized
+        UI->>User: Show error message
+    end

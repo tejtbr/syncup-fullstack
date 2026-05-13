@@ -1,0 +1,42 @@
+sequenceDiagram
+    participant User as User<br/>(Bob)
+    participant UI as Team Dashboard<br/>Component
+    participant StatusCtrl as Status Controller
+    participant StatusSvc as Status Service
+    participant Cache as Redis Cache
+    participant DB as PostgreSQL
+    participant WS as WebSocket
+    participant StatusSvc2 as Status Service<br/>(Live Updates)
+    
+    User->>UI: Open Team Dashboard
+    
+    UI->>StatusCtrl: GET /api/status/team/{teamId}
+    
+    StatusCtrl->>StatusSvc: getTeamDashboard(teamId, date)
+    
+    StatusSvc->>Cache: Check cache<br/>'teamDashboard_' + teamId + '_' + date
+    
+    alt Cache Hit
+        Cache->>StatusSvc: Return cached statuses
+    else Cache Miss
+        StatusSvc->>DB: Query all team members<br/>& their status
+        DB->>StatusSvc: List of MemberStatusDto
+        StatusSvc->>Cache: Store result (TTL)
+    end
+    
+    StatusSvc->>StatusCtrl: List<MemberStatusDto>
+    StatusCtrl->>UI: 200 OK [members with statuses]
+    UI->>UI: Render team dashboard
+    UI->>User: Display all members<br/>& their statuses
+    
+    Note over UI: User subscribes to live updates
+    UI->>WS: Subscribe to /topic/status
+    
+    par Live Update Loop
+        loop Every status change
+            StatusSvc2->>WS: Publish StatusUpdatedEvent
+            WS->>UI: New status notification
+            UI->>UI: Update member row<br/>Real-time
+            UI->>User: Live dashboard update
+        end
+    end

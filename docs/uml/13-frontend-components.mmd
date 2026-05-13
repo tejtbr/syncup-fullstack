@@ -1,0 +1,89 @@
+graph TB
+    subgraph App["App.jsx<br/>Main Router"]
+        Router["React Router<br/>Route Configuration"]
+    end
+    
+    subgraph Auth["Authentication"]
+        AuthCtx["AuthContext<br/>- token<br/>- user<br/>- login/logout"]
+        LoginPage["LoginPage<br/>Login Form"]
+        RegisterPage["RegisterPage<br/>Registration Form"]
+    end
+    
+    subgraph Pages["Pages"]
+        Dashboard["DashboardPage<br/>Main Dashboard"]
+        TeamPage["TeamPage<br/>Team View"]
+        TeamsListPage["TeamsListPage<br/>My Teams"]
+        AnalyticsPage["AnalyticsPage<br/>Reports"]
+        VibePage["VibeDashboardPage<br/>Mood Analytics"]
+        LocationPage["LocationPage<br/>Office Locations"]
+    end
+    
+    subgraph Components["UI Components"]
+        Layout["Layout<br/>Header + Sidebar"]
+        StatusBadge["StatusBadge<br/>Status Display"]
+        StatusPicker["StatusPicker<br/>Status Selector"]
+        OrgSummary["OrgSummary<br/>Organization View"]
+    end
+    
+    subgraph Hooks["Custom Hooks"]
+        useAuth["useAuth<br/>Access AuthContext"]
+        useWebSocket["useStatusWebSocket<br/>Live Updates"]
+    end
+    
+    subgraph API["API Integration"]
+        Client["Axios Client<br/>- JWT interceptor<br/>- 401 handling"]
+        AuthAPI["authApi"]
+        StatusAPI["statusApi"]
+        TeamAPI["teamApi"]
+        UserAPI["userApi"]
+    end
+    
+    subgraph Context["State Management"]
+        AuthState["User Auth State"]
+        CacheState["Response Caching"]
+    end
+    
+    App --> Router
+    Router --> LoginPage
+    Router --> RegisterPage
+    Router --> Dashboard
+    Router --> TeamPage
+    Router --> TeamsListPage
+    Router --> AnalyticsPage
+    Router --> VibePage
+    Router --> LocationPage
+    
+    LoginPage --> AuthCtx
+    RegisterPage --> AuthCtx
+    Dashboard --> AuthCtx
+    Dashboard --> useAuth
+    
+    Dashboard --> Layout
+    Dashboard --> StatusPicker
+    Dashboard --> useWebSocket
+    
+    TeamPage --> StatusBadge
+    TeamPage --> useWebSocket
+    
+    TeamsListPage --> OrgSummary
+    
+    StatusPicker --> StatusAPI
+    StatusBadge --> StatusAPI
+    TeamPage --> TeamAPI
+    Dashboard --> TeamAPI
+    
+    AuthAPI --> Client
+    StatusAPI --> Client
+    TeamAPI --> Client
+    UserAPI --> Client
+    
+    useWebSocket --> API
+    
+    Client --> Context
+    AuthCtx --> Context
+    
+    style App fill:#e3f2fd
+    style Pages fill:#f3e5f5
+    style Components fill:#e8f5e9
+    style API fill:#fff3e0
+    style Context fill:#fce4ec

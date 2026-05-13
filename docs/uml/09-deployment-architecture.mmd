@@ -1,0 +1,57 @@
+graph TB
+    subgraph Docker["Docker Environment"]
+        subgraph FE["Frontend Container"]
+            NGINX["NGINX Server<br/>port 80/3000"]
+            REACT["React App<br/>Vite Build"]
+        end
+        
+        subgraph BE["Backend Container"]
+            SPRING["Spring Boot Service<br/>port 8080<br/>syncup-presence-service"]
+            TOMCAT["Embedded Tomcat<br/>Servlet Container"]
+        end
+        
+        subgraph DB["Database Container"]
+            PG["PostgreSQL 15<br/>port 5432<br/>Database: syncup_db"]
+            PGDATA["Persistent Volume<br/>postgres_data"]
+        end
+        
+        subgraph CACHE["Cache Container"]
+            REDIS["Redis 7<br/>port 6379<br/>Session & Cache"]
+        end
+    end
+    
+    subgraph Host["Host Machine"]
+        BROWSER["Web Browser"]
+        EXT["Browser Extension"]
+    end
+    
+    subgraph Config["Configuration"]
+        ENV["Environment Variables<br/>SPRING_DATASOURCE_URL<br/>JWT_SECRET<br/>REDIS_HOST"]
+        INIT["init.sql<br/>Schema + Seed Data"]
+    end
+    
+    BROWSER -->|HTTP requests<br/>port 3000| NGINX
+    BROWSER -->|WebSocket<br/>port 8080| TOMCAT
+    EXT -->|API calls<br/>port 8080| TOMCAT
+    
+    NGINX -->|Serves static files| REACT
+    REACT -->|API calls| TOMCAT
+    
+    TOMCAT -->|Depends on| PG
+    TOMCAT -->|Depends on| REDIS
+    
+    SPRING -->|Business Logic| TOMCAT
+    SPRING -->|Query/Store| PG
+    SPRING -->|Cache/Session| REDIS
+    
+    PG -->|Persistent storage| PGDATA
+    
+    ENV -->|Configures| SPRING
+    INIT -->|Initializes| PG
+    
+    style Docker fill:#f5f5f5
+    style FE fill:#e3f2fd
+    style BE fill:#fff3e0
+    style DB fill:#e8f5e9
+    style CACHE fill:#f3e5f5
+    style Host fill:#ffe0b2

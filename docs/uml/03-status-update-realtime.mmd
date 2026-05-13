@@ -1,0 +1,33 @@
+sequenceDiagram
+    participant User1 as User 1<br/>(Alice)
+    participant UI1 as UI1<br/>Dashboard
+    participant StatusCtrl as Status Controller
+    participant StatusSvc as Status Service
+    participant StatusRepo as Status Repository
+    participant Cache as Redis Cache
+    participant WS as WebSocket/STOMP<br/>Broker
+    participant UI2 as UI2<br/>Team Dashboard
+    participant User2 as User 2<br/>(Bob - watching team)
+    participant DB as PostgreSQL
+    
+    User1->>UI1: Set status to "IN_OFFICE"
+    UI1->>StatusCtrl: POST /api/status/me<br/>{status: "IN_OFFICE"}
+    
+    StatusCtrl->>StatusSvc: setStatus(userId, request)
+    
+    StatusSvc->>StatusRepo: Save/Update status
+    StatusRepo->>DB: INSERT/UPDATE user_statuses
+    DB->>StatusRepo: Success
+    
+    StatusSvc->>Cache: Invalidate cache<br/>teamDashboard_*
+    
+    StatusSvc->>WS: Publish to /topic/status<br/>StatusUpdatedEvent
+    
+    WS->>UI1: Confirm update received
+    UI1->>User1: Show "Status Updated"
+    
+    WS->>UI2: Broadcast status change<br/>for Alice
+    
+    UI2->>User2: Update live dashboard<br/>Alice is now IN_OFFICE
+    
+    Note over StatusSvc,DB: Future: Event published to Kafka<br/>for analytics & audit trail

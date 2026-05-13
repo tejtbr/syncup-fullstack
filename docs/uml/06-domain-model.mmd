@@ -1,0 +1,93 @@
+classDiagram
+    class User {
+        -UUID id
+        -String email
+        -String password
+        -String fullName
+        -String department
+        -String avatarUrl
+        -Role role
+        -Timestamp createdAt
+        -Timestamp updatedAt
+        +getId()
+        +getEmail()
+        +getPassword()
+    }
+    
+    class Team {
+        -UUID id
+        -String name
+        -String description
+        -UUID createdBy
+        -Timestamp createdAt
+        -Timestamp updatedAt
+        +getId()
+        +getName()
+        +getMembers()
+    }
+    
+    class TeamMember {
+        -UUID id
+        -UUID teamId
+        -UUID userId
+        -String role
+        -Timestamp joinedAt
+        +getTeamId()
+        +getUserId()
+        +getRole()
+    }
+    
+    class UserStatus {
+        -UUID id
+        -UUID userId
+        -Status status
+        -LocalDate statusDate
+        -UUID officeLocationId
+        -String note
+        -Timestamp createdAt
+        -Timestamp updatedAt
+        +getStatus()
+        +getStatusDate()
+    }
+    
+    class OfficeLocation {
+        -UUID id
+        -String name
+        -String city
+        -String country
+        -Timestamp createdAt
+        +getName()
+        +getCity()
+    }
+    
+    class StatusUpdatedEvent {
+        -UUID userId
+        -String userEmail
+        -Status status
+        -LocalDate date
+        -OfficeLocation location
+        -Timestamp timestamp
+    }
+    
+    class JwtToken {
+        -String token
+        -String username
+        -Long expiration
+        +isValid()
+        +isExpired()
+    }
+    
+    User "1" --> "*" Team : creates
+    User "1" --> "*" UserStatus : has
+    User "1" --> "*" TeamMember : belongs_to
+    Team "1" --> "*" TeamMember : contains
+    Team "0..1" --> "*" UserStatus : has
+    UserStatus "0..1" --> "1" OfficeLocation : refers_to
+    UserStatus --> StatusUpdatedEvent : generates
+    
+    style User fill:#e3f2fd
+    style Team fill:#f3e5f5
+    style UserStatus fill:#e8f5e9
+    style OfficeLocation fill:#fff3e0
+    style StatusUpdatedEvent fill:#fce4ec
+    style JwtToken fill:#f5f5f5

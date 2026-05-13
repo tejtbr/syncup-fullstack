@@ -1,0 +1,55 @@
+graph LR
+    subgraph User["User Action"]
+        A["User clicks<br/>Status Update Button"]
+    end
+    
+    subgraph Frontend["Frontend - React"]
+        B["Form Component<br/>captures status"]
+        C["Validate Input"]
+        D["Prepare Request"]
+        E["Attach JWT Token<br/>from localStorage"]
+    end
+    
+    subgraph Network["Network"]
+        F["HTTP POST Request<br/>/api/status/me<br/>with JWT Header"]
+    end
+    
+    subgraph Backend["Backend - Spring Boot"]
+        G["AuthFilter validates JWT"]
+        H["Extract user from token"]
+        I["StatusController receives request"]
+        J["StatusService processes update"]
+    end
+    
+    subgraph Persistence["Data Persistence"]
+        K["Query existing status<br/>or create new"]
+        L["Save to PostgreSQL<br/>user_statuses table"]
+    end
+    
+    subgraph Caching["Cache Layer"]
+        M["Invalidate Redis cache<br/>teamDashboard_*"]
+    end
+    
+    subgraph RealTime["Real-time Broadcast"]
+        N["Create StatusUpdatedEvent"]
+        O["Publish to WebSocket<br/>/topic/status"]
+        P["All subscribed clients<br/>receive update"]
+    end
+    
+    subgraph Response["Response"]
+        Q["Return HTTP 200"]
+        R["Show confirmation UI"]
+    end
+    
+    A --> B --> C --> D --> E --> F
+    F --> G --> H --> I --> J
+    J --> K --> L
+    J --> M
+    J --> N --> O --> P
+    J --> Q --> R
+    
+    style Frontend fill:#e3f2fd
+    style Backend fill:#fff3e0
+    style Persistence fill:#e8f5e9
+    style Caching fill:#f3e5f5
+    style RealTime fill:#fce4ec

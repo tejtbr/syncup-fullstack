@@ -1,0 +1,50 @@
+graph TD
+    A["Request reaches Controller"] --> B{Validation Check}
+    
+    B -->|Invalid input| C["MethodArgumentNotValidException"]
+    B -->|Valid| D["Process Request"]
+    
+    D --> E{Business Logic}
+    
+    E -->|User not found| F["EntityNotFoundException"]
+    E -->|Invalid credentials| G["BadCredentialsException"]
+    E -->|Permission denied| H["AccessDeniedException"]
+    E -->|Duplicate team| I["UniqueConstraintViolation"]
+    E -->|Success| J["Service returns Result"]
+    
+    C --> K["GlobalExceptionHandler"]
+    F --> K
+    G --> K
+    H --> K
+    I --> K
+    
+    K --> L{Exception Type}
+    
+    L -->|Validation| M["400 Bad Request<br/>field errors"]
+    L -->|Not Found| N["404 Not Found<br/>resource missing"]
+    L -->|Auth| O["401 Unauthorized<br/>invalid credentials"]
+    L -->|Access| P["403 Forbidden<br/>insufficient permissions"]
+    L -->|Conflict| Q["409 Conflict<br/>duplicate resource"]
+    L -->|Other| R["500 Internal Error<br/>error details"]
+    
+    M --> S["Send to Client"]
+    N --> S
+    O --> S
+    P --> S
+    Q --> S
+    R --> S
+    
+    J --> T["Build ApiResponse<br/>with data"]
+    T --> U["200 OK / 201 Created"]
+    U --> S
+    
+    S --> V["Client receives<br/>error/success response"]
+    V --> W{Handle Response}
+    W -->|Error| X["Show error toast"]
+    W -->|Redirect needed| Y["Redirect to login"]
+    W -->|Success| Z["Update UI state"]
+    
+    style K fill:#ffcdd2
+    style J fill:#c8e6c9
+    style M fill:#fff9c4
+    style S fill:#e1f5fe

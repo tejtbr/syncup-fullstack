@@ -1,0 +1,39 @@
+sequenceDiagram
+    participant Manager as Manager<br/>(Alice)
+    participant UI as React UI
+    participant TeamCtrl as Team Controller
+    participant TeamSvc as Team Service
+    participant TeamRepo as Team Repository
+    participant UserRepo as User Repository
+    participant TeamMemberRepo as TeamMember Repository
+    participant DB as PostgreSQL
+    
+    Manager->>UI: Create new team<br/>"Engineering"
+    UI->>TeamCtrl: POST /api/teams<br/>{name, description}
+    
+    TeamCtrl->>TeamSvc: createTeam(userId, request)
+    TeamSvc->>TeamRepo: Create team
+    TeamRepo->>DB: INSERT INTO teams
+    DB->>TeamRepo: teamId
+    
+    TeamSvc->>TeamMemberRepo: Add creator as member
+    TeamMemberRepo->>DB: INSERT INTO team_members<br/>(teamId, userId, role='MEMBER')
+    
+    TeamSvc->>TeamCtrl: TeamResponse
+    TeamCtrl->>UI: 201 Created {team}
+    UI->>Manager: Team created
+    
+    Manager->>UI: Add members to team
+    UI->>TeamCtrl: POST /api/teams/{teamId}/members<br/>{userId}
+    
+    TeamCtrl->>TeamSvc: addMember(teamId, request)
+    
+    TeamSvc->>UserRepo: Verify user exists
+    UserRepo->>DB: SELECT * FROM users
+    
+    TeamSvc->>TeamMemberRepo: Add member
+    TeamMemberRepo->>DB: INSERT INTO team_members
+    
+    TeamSvc->>TeamCtrl: TeamMemberDto
+    TeamCtrl->>UI: 201 Created {member}
+    UI->>Manager: Member added

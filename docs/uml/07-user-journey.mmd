@@ -1,0 +1,47 @@
+graph TD
+    Start([User Visits SyncUp]) --> CheckAuth{Authenticated?}
+    
+    CheckAuth -->|No| LoginPage["Display Login Page"]
+    LoginPage --> EnterCreds["Enter Email & Password"]
+    EnterCreds --> ValidateCreds{Valid Credentials?}
+    
+    ValidateCreds -->|No| ErrorMsg["Show Error Message"]
+    ErrorMsg --> LoginPage
+    
+    ValidateCreds -->|Yes| CreateJWT["Create JWT Token"]
+    CreateJWT --> StoreToken["Store token in localStorage"]
+    
+    CheckAuth -->|Yes| Dashboard["Display Dashboard"]
+    StoreToken --> Dashboard
+    
+    Dashboard --> ViewTeams["View My Teams"]
+    Dashboard --> CreateTeam["Create New Team"]
+    Dashboard --> SetStatus["Set My Status"]
+    
+    ViewTeams --> SelectTeam["Select Team"]
+    SelectTeam --> TeamDashboard["View Team Dashboard<br/>All members' statuses"]
+    TeamDashboard --> Subscribe["Subscribe to WebSocket<br/>Live Updates"]
+    Subscribe --> WatchUpdates["Watch for status changes<br/>Real-time"]
+    WatchUpdates --> UpdateUI["UI updates in real-time"]
+    
+    CreateTeam --> EnterTeamInfo["Enter team name<br/>& description"]
+    EnterTeamInfo --> AddMembers["Add members to team"]
+    AddMembers --> TeamCreated["Team created successfully"]
+    
+    SetStatus --> ChooseStatus["Choose: IN_OFFICE,<br/>REMOTE, ON_LEAVE,<br/>UNDECIDED"]
+    ChooseStatus --> SelectLocation["Select Office Location<br/>if IN_OFFICE"]
+    SelectLocation --> AddNote["Add optional note"]
+    AddNote --> SubmitStatus["Submit Status"]
+    SubmitStatus --> WebSocketBroadcast["Status broadcasted<br/>via WebSocket"]
+    WebSocketBroadcast --> StatusConfirm["Status updated<br/>confirmation"]
+    
+    TeamDashboard --> Logout["Logout"]
+    Dashboard --> Logout
+    Logout --> ClearToken["Clear token from storage"]
+    ClearToken --> End([Back to Login])
+    
+    style Start fill:#e8f5e9
+    style Dashboard fill:#e3f2fd
+    style TeamDashboard fill:#f3e5f5
+    style WebSocketBroadcast fill:#fce4ec
+    style End fill:#ffebee

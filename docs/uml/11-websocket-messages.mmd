@@ -1,0 +1,46 @@
+sequenceDiagram
+    participant Client1 as Client 1<br/>Alice
+    participant Client2 as Client 2<br/>Bob  
+    participant WS as WebSocket Server<br/>STOMP Broker
+    participant StatusSvc as Status Service
+    participant DB as PostgreSQL
+    
+    Note over Client1,WS: Initial Connection
+    
+    Client1->>WS: CONNECT<br/>Authorization: Bearer JWT
+    WS->>WS: Validate JWT
+    WS->>Client1: CONNECTED
+    
+    Client2->>WS: CONNECT<br/>Authorization: Bearer JWT
+    WS->>WS: Validate JWT
+    WS->>Client2: CONNECTED
+    
+    Note over Client1,WS: Subscriptions
+    
+    Client1->>WS: SUBSCRIBE /topic/status
+    WS->>Client1: RECEIPT
+    
+    Client2->>WS: SUBSCRIBE /topic/status
+    WS->>Client2: RECEIPT
+    
+    Note over Client1,WS: Status Update Event
+    
+    Client1->>StatusSvc: Update status via REST
+    StatusSvc->>DB: Save new status
+    StatusSvc->>WS: SEND /topic/status<br/>{userId: Alice, status: IN_OFFICE}
+    
+    Note over WS: Broadcast to all<br/>subscribed clients
+    
+    WS->>Client1: MESSAGE {update}
+    WS->>Client2: MESSAGE {update}
+    
+    Client1->>Client1: Update own row
+    Client2->>Client2: Update Alice's row
+    
+    Note over Client1,WS: Graceful Disconnect
+    
+    Client1->>WS: DISCONNECT
+    WS->>Client1: RECEIPT
+    WS->>WS: Clean up subscription
+    
+    Note over Client2: Client2 still<br/>subscribed
