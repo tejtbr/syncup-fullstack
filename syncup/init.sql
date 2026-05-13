@@ -63,9 +63,9 @@ CREATE INDEX IF NOT EXISTS idx_user_statuses_user_date ON user_statuses(user_id,
 
 -- Seed office locations
 INSERT INTO office_locations (name, city, country) VALUES
-    ('HQ - Bengaluru', 'Bengaluru', 'India'),
-    ('Branch - Mumbai', 'Mumbai', 'India'),
-    ('Branch - Delhi', 'Delhi', 'India')
+    ('USA', 'Andover, Massachusetts', 'United States'),
+    ('Bangalore', 'Banaglore', 'India'),
+    ('Canada', 'Burlington / Ontario', 'Canada')
 ON CONFLICT DO NOTHING;
 
 -- Seed demo users (password: Password@123)

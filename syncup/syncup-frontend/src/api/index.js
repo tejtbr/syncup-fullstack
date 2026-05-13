@@ -85,3 +85,23 @@ export const analyticsApiCalls = {
   getOrgSummary: (date) =>
     analyticsApi.get('/api/analytics/summary', { params: { date } }).then(r => r.data.data),
 };
+
+// --- VibeCheck (port 8082) ---
+const vibeApi = axios.create({
+  baseURL: import.meta.env.VITE_VIBE_URL || 'http://localhost:8082',
+  headers: { 'Content-Type': 'application/json' },
+});
+
+export const vibeApiCalls = {
+  submitMood: (userId, data) =>
+    vibeApi.post(`/api/vibe/mood?userId=${userId}`, data).then(r => r.data.data),
+
+  getMyMoodToday: (userId) =>
+    vibeApi.get(`/api/vibe/mood/me?userId=${userId}`).then(r => r.data.data),
+
+  getMyHistory: (userId) =>
+    vibeApi.get(`/api/vibe/mood/history?userId=${userId}`).then(r => r.data.data),
+
+  getDashboard: () =>
+    vibeApi.get('/api/vibe/dashboard').then(r => r.data.data),
+};

@@ -1,13 +1,14 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
-import LoginPage      from './pages/LoginPage'
-import RegisterPage   from './pages/RegisterPage'
-import DashboardPage  from './pages/DashboardPage'
-import TeamPage       from './pages/TeamPage'
-import TeamsListPage  from './pages/TeamsListPage'
-import AnalyticsPage  from './pages/AnalyticsPage'
-import LocationPage   from './pages/LocationPage'
-import Layout         from './components/common/Layout'
+import LoginPage          from './pages/LoginPage'
+import RegisterPage       from './pages/RegisterPage'
+import DashboardPage      from './pages/DashboardPage'
+import TeamPage           from './pages/TeamPage'
+import TeamsListPage      from './pages/TeamsListPage'
+import AnalyticsPage      from './pages/AnalyticsPage'
+import LocationPage       from './pages/LocationPage'
+import VibeDashboardPage  from './pages/VibeDashboardPage'
+import Layout             from './components/common/Layout'
 
 function Spinner() {
   return (
@@ -35,6 +36,7 @@ export default function App() {
           <Route path="teams/:id"    element={<TeamPage />} />
           <Route path="analytics"    element={<AnalyticsPage />} />
           <Route path="locations"    element={<LocationPage />} />
+          <Route path="vibes"        element={<VibeDashboardPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

@@ -2,10 +2,11 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 
 const navItems = [
-  { to: '/',           label: 'Dashboard',  icon: '⊞', end: true  },
-  { to: '/teams',      label: 'My Teams',   icon: '⊕', end: false },
-  { to: '/analytics',  label: 'Analytics',  icon: '📊', end: false },
-  { to: '/locations',  label: 'Locations',  icon: '🏢', end: false },
+  { to: '/',          label: 'Dashboard',  icon: '⊞',  end: true  },
+  { to: '/teams',     label: 'My Teams',   icon: '⊕',  end: false },
+  { to: '/analytics', label: 'Analytics',  icon: '📊', end: false },
+  { to: '/locations', label: 'Locations',  icon: '🏢', end: false },
+  { to: '/vibes',     label: 'VibeCheck',  icon: '💚', end: false },
 ]
 
 function Avatar({ user }) {
@@ -27,7 +28,6 @@ export default function Layout() {
         <div className="h-14 flex items-center px-5 border-b border-gray-100">
           <span className="text-lg font-bold text-brand-600">SyncUp</span>
         </div>
-
         <nav className="flex-1 p-3 space-y-1">
           {navItems.map(item => (
             <NavLink
@@ -45,7 +45,6 @@ export default function Layout() {
             </NavLink>
           ))}
         </nav>
-
         <div className="p-3 border-t border-gray-100">
           <div className="flex items-center gap-2 px-2 py-2">
             <Avatar user={user} />
@@ -62,7 +61,6 @@ export default function Layout() {
           </button>
         </div>
       </aside>
-
       <main className="flex-1 overflow-auto">
         <Outlet />
       </main>
