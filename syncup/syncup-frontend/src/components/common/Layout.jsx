@@ -2,11 +2,12 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 
 const navItems = [
-  { to: '/',          label: 'Dashboard',  icon: '⊞',  end: true  },
-  { to: '/teams',     label: 'My Teams',   icon: '⊕',  end: false },
+  { to: '/',          label: 'Dashboard',  icon: '⊞', end: true  },
+  { to: '/teams',     label: 'My Teams',   icon: '⊕', end: false },
   { to: '/analytics', label: 'Analytics',  icon: '📊', end: false },
   { to: '/locations', label: 'Locations',  icon: '🏢', end: false },
   { to: '/vibes',     label: 'VibeCheck',  icon: '💚', end: false },
+  { to: '/ideas',     label: 'Ideas',      icon: '💡', end: false },
 ]
 
 function Avatar({ user }) {
@@ -21,6 +22,7 @@ function Avatar({ user }) {
 export default function Layout() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const isAdmin = user?.role === 'ADMIN'
 
   return (
     <div className="flex min-h-screen">
@@ -28,6 +30,7 @@ export default function Layout() {
         <div className="h-14 flex items-center px-5 border-b border-gray-100">
           <span className="text-lg font-bold text-brand-600">SyncUp</span>
         </div>
+
         <nav className="flex-1 p-3 space-y-1">
           {navItems.map(item => (
             <NavLink
@@ -44,7 +47,28 @@ export default function Layout() {
               {item.label}
             </NavLink>
           ))}
+
+          {/* Admin link — only visible to admins */}
+          {isAdmin && (
+            <>
+              <div className="pt-2 pb-1">
+                <p className="text-[10px] font-semibold text-gray-300 uppercase tracking-wider px-3">Admin</p>
+              </div>
+              <NavLink
+                to="/admin"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    isActive ? 'bg-rose-50 text-rose-700' : 'text-gray-600 hover:bg-rose-50 hover:text-rose-600'
+                  }`
+                }
+              >
+                <span className="text-base">🛡️</span>
+                Admin Panel
+              </NavLink>
+            </>
+          )}
         </nav>
+
         <div className="p-3 border-t border-gray-100">
           <div className="flex items-center gap-2 px-2 py-2">
             <Avatar user={user} />
@@ -61,6 +85,7 @@ export default function Layout() {
           </button>
         </div>
       </aside>
+
       <main className="flex-1 overflow-auto">
         <Outlet />
       </main>

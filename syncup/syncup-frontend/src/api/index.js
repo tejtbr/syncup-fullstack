@@ -105,3 +105,33 @@ export const vibeApiCalls = {
   getDashboard: () =>
     vibeApi.get('/api/vibe/dashboard').then(r => r.data.data),
 };
+
+// --- Admin API ---
+export const adminApi = {
+  getOverview: (date) =>
+    api.get('/api/admin/overview', { params: { date } }).then(r => r.data.data),
+  getEmployees: () =>
+    api.get('/api/admin/employees').then(r => r.data.data),
+  getLocations: () =>
+    api.get('/api/admin/locations').then(r => r.data.data),
+  addLocation: (data) =>
+    api.post('/api/admin/locations', data).then(r => r.data.data),
+  updateLocation: (id, data) =>
+    api.put(`/api/admin/locations/${id}`, data).then(r => r.data.data),
+  deleteLocation: (id) =>
+    api.delete(`/api/admin/locations/${id}`),
+};
+
+// --- Ideas API ---
+export const ideasApi = {
+  getAll: () =>
+    api.get('/api/ideas').then(r => r.data.data),
+  submit: (data) =>
+    api.post('/api/ideas', data).then(r => r.data.data),
+  upvote: (id) =>
+    api.post(`/api/ideas/${id}/upvote`).then(r => r.data.data),
+  adminRespond: (id, data) =>
+    api.patch(`/api/ideas/${id}/respond`, data).then(r => r.data.data),
+  delete: (id) =>
+    api.delete(`/api/ideas/${id}`),
+};
