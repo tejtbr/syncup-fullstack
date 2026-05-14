@@ -6,6 +6,7 @@
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/event/StatusUpdatedEvent.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/config/KafkaProducerConfig.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/repository/TeamMemberRepository.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/model/IdeaUpvote.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/config/WebSocketConfig.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/service/IdeaService.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/dto/OfficeLocationDto.java
@@ -15,6 +16,7 @@
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/controller/IdeaController.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/repository/IdeaRepository.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/service/TeamService.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/repository/IdeaUpvoteRepository.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/service/StatusService.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/model/StatusType.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/exception/AppException.java

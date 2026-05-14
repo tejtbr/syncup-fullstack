@@ -61,6 +61,33 @@ CREATE TABLE IF NOT EXISTS user_statuses (
 CREATE INDEX IF NOT EXISTS idx_user_statuses_date ON user_statuses(status_date);
 CREATE INDEX IF NOT EXISTS idx_user_statuses_user_date ON user_statuses(user_id, status_date);
 
+-- Ideas table
+CREATE TABLE IF NOT EXISTS ideas (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    submitted_by UUID REFERENCES users(id) ON DELETE CASCADE,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    category VARCHAR(50) DEFAULT 'Other',
+    status VARCHAR(50) DEFAULT 'OPEN',
+    admin_response TEXT,
+    upvote_count INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_ideas_submitted_by ON ideas(submitted_by);
+CREATE INDEX IF NOT EXISTS idx_ideas_status ON ideas(status);
+CREATE INDEX IF NOT EXISTS idx_ideas_created_at ON ideas(created_at DESC);
+
+-- Idea upvotes table
+CREATE TABLE IF NOT EXISTS idea_upvotes (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    idea_id UUID REFERENCES ideas(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(idea_id, user_id)
+);
+
 -- Seed office locations
 INSERT INTO office_locations (name, city, country) VALUES
     ('USA', 'Andover, Massachusetts', 'United States'),

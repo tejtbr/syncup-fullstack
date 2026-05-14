@@ -25,7 +25,7 @@ public class IdeaService {
 
     // ── Submit idea ──────────────────────────────────────────────────────────
     @Transactional
-    public IdeaDtos.IdeaResponse createIdea(UUID userId, IdeaDtos.CreateIdeaRequest req) {
+    public IdeaDtos.IdeaResponse submitIdea(UUID userId, IdeaDtos.CreateIdeaRequest req) {
         User user = userRepo.findById(userId)
             .orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
 
@@ -76,7 +76,7 @@ public class IdeaService {
 
     // ── Admin: update status + response ─────────────────────────────────────
     @Transactional
-    public IdeaDtos.IdeaResponse adminUpdate(UUID ideaId, UUID adminId, IdeaDtos.AdminUpdateRequest req) {
+    public IdeaDtos.IdeaResponse adminRespond(UUID ideaId, UUID adminId, IdeaDtos.AdminResponseRequest req) {
         User admin = userRepo.findById(adminId)
             .orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
 

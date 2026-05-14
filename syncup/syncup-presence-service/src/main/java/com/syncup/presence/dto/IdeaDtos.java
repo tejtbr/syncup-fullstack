@@ -24,7 +24,7 @@ public class IdeaDtos {
     }
 
     @Data
-    public static class AdminUpdateRequest {
+    public static class AdminResponseRequest {
         private Idea.IdeaStatus status;
         private String adminResponse;
     }
@@ -37,9 +37,11 @@ public class IdeaDtos {
         private String category;
         private Idea.IdeaStatus status;
         private String adminResponse;
+        private String respondedBy;
         private int upvoteCount;
         private boolean upvotedByMe;
-        private UserDto submittedBy;
+        private String submittedByName;
+        private String submittedByDept;
         private LocalDateTime createdAt;
 
         public static IdeaResponse from(Idea idea, boolean upvotedByMe) {
@@ -50,9 +52,11 @@ public class IdeaDtos {
             r.setCategory(idea.getCategory());
             r.setStatus(idea.getStatus());
             r.setAdminResponse(idea.getAdminResponse());
+            r.setRespondedBy(null);
             r.setUpvoteCount(idea.getUpvoteCount());
             r.setUpvotedByMe(upvotedByMe);
-            r.setSubmittedBy(UserDto.from(idea.getSubmittedBy()));
+            r.setSubmittedByName(idea.getSubmittedBy() != null ? idea.getSubmittedBy().getFullName() : null);
+            r.setSubmittedByDept(idea.getSubmittedBy() != null ? idea.getSubmittedBy().getDepartment() : null);
             r.setCreatedAt(idea.getCreatedAt());
             return r;
         }
