@@ -2,6 +2,7 @@ package com.syncup.vibecheck.controller;
 
 import com.syncup.vibecheck.dto.*;
 import com.syncup.vibecheck.service.MoodService;
+import com.syncup.vibecheck.service.MoodCommentAnalysisService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.UUID;
 public class MoodController {
 
     private final MoodService moodService;
+    private final MoodCommentAnalysisService commentAnalysisService;
 
     /**
      * Submit or update mood for today
@@ -62,5 +64,18 @@ public class MoodController {
     @GetMapping("/dashboard")
     public ResponseEntity<ApiResponse<TeamSummary>> getDashboard() {
         return ResponseEntity.ok(ApiResponse.ok(moodService.getTeamSummary()));
+    }
+
+    /**
+     * Analyze mood comments by date range and department
+     * POST /api/vibe/analyze-comments
+     * Admin-only endpoint to analyze anonymous comments from mood_entries table
+     */
+    @PostMapping("/analyze-comments")
+    public ResponseEntity<ApiResponse<CommentAnalysisDtos.CommentAnalysis>> analyzeMoodComments(
+        @Valid @RequestBody CommentAnalysisDtos.CommentAnalysisRequest request
+    ) {
+        CommentAnalysisDtos.CommentAnalysis analysis = commentAnalysisService.analyzeMoodComments(request);
+        return ResponseEntity.ok(ApiResponse.ok(analysis));
     }
 }

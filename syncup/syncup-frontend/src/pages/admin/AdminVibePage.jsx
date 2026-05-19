@@ -13,8 +13,14 @@ const MOOD = {
 const meta = avg => MOOD[Math.round(avg)] || MOOD[3]
 
 export default function AdminVibePage() {
+  const today = new Date().toISOString().slice(0, 10)
+  const weekAgo = new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+
   const [summary, setSummary] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [fromDate, setFromDate] = useState(weekAgo)
+  const [toDate, setToDate] = useState(today)
+  const [department, setDepartment] = useState('All')
 
   useEffect(() => {
     vibeApiCalls.getDashboard()
@@ -145,8 +151,57 @@ export default function AdminVibePage() {
         </div>
       )}
 
+      <div className="card p-5">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="text-base font-semibold text-gray-800">AI Comments Summary Filters</h2>
+            <p className="text-xs text-gray-500 mt-1">
+              Use the filters below to analyze anonymous mood comments by range and department.
+            </p>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-3 w-full sm:w-auto">
+            <label className="block text-xs text-gray-500">
+              From
+              <input
+                type="date"
+                value={fromDate}
+                onChange={(e) => setFromDate(e.target.value)}
+                className="mt-1 block w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700"
+              />
+            </label>
+            <label className="block text-xs text-gray-500">
+              To
+              <input
+                type="date"
+                value={toDate}
+                onChange={(e) => setToDate(e.target.value)}
+                className="mt-1 block w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700"
+              />
+            </label>
+            <label className="block text-xs text-gray-500">
+              Department
+              <select
+                value={department}
+                onChange={(e) => setDepartment(e.target.value)}
+                className="mt-1 block w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700"
+              >
+                <option value="All">All Departments</option>
+                {summary.departmentBreakdown?.map((dept) => (
+                  <option key={dept.department} value={dept.department}>{dept.department}</option>
+                ))}
+              </select>
+            </label>
+          </div>
+        </div>
+      </div>
+
       {/* Employee Voice — AI Comment Analysis */}
-      <EmployeeVoiceCard comments={summary.anonymousComments} />
+      <EmployeeVoiceCard
+        dateFrom={fromDate}
+        dateTo={toDate}
+        department={department === 'All' ? null : department}
+      />
       {summary.anonymousComments?.length > 0 && (
         <div className="card p-5">
           <h2 className="text-base font-semibold text-gray-800 mb-1">Anonymous Comments Today</h2>

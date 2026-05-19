@@ -123,8 +123,19 @@ export const adminApi = {
 };
 
 // --- Vibe Analysis API (Admin only) ---
+// Note: This now uses the vibecheck service for comments from mood_entries table
 export const vibeAnalysisApi = {
-  analyzeComments: (comments) =>
+  // Analyze comments with date range and optional department filter
+  analyzeComments: (dateFrom, dateTo, department = null) =>
+    vibeApi.post('/api/vibe/analyze-comments', { 
+      dateFrom, 
+      dateTo, 
+      department,
+      period: `from ${dateFrom} to ${dateTo}`
+    }).then(r => r.data.data),
+
+  // Legacy endpoint (kept for backward compatibility if needed)
+  legacyAnalyzeComments: (comments) =>
     api.post('/api/admin/vibe/analyze-comments', { comments }).then(r => r.data.data),
 };
 

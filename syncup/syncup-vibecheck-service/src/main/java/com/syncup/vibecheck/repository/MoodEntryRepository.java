@@ -64,4 +64,19 @@ public interface MoodEntryRepository extends JpaRepository<MoodEntry, UUID> {
     // Average mood today
     @Query("SELECT AVG(m.moodScore) FROM MoodEntry m WHERE m.entryDate = :date")
     Double getAverageMoodForDate(@Param("date") LocalDate date);
+
+    // Get comments by date range and optional department filter
+    @Query("""
+        SELECT m FROM MoodEntry m
+        WHERE m.entryDate BETWEEN :from AND :to
+        AND m.comment IS NOT NULL
+        AND m.comment <> ''
+        AND (:department IS NULL OR m.department = :department)
+        ORDER BY m.entryDate DESC
+    """)
+    List<MoodEntry> findCommentsByDateRangeAndDepartment(
+        @Param("from") LocalDate from,
+        @Param("to") LocalDate to,
+        @Param("department") String department
+    );
 }

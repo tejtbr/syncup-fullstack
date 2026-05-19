@@ -3,31 +3,51 @@ import { vibeAnalysisApi } from '../../api';
 import toast from 'react-hot-toast';
 
 const periods = [
-  { label: 'Today', value: 'today' },
-  { label: 'Last 1 Week', value: 'last 1 week' },
-  { label: 'Last 2 Weeks', value: 'last 2 weeks' },
-  { label: 'Last 3 Weeks', value: 'last 3 weeks' },
-  { label: 'Last 4 Weeks', value: 'last 4 weeks' },
+  { label: 'Today', value: 'today', dateFrom: null, dateTo: null }, // Will be set dynamically
+  { label: 'Last 1 Week', value: 'last 1 week', daysBack: 7 },
+  { label: 'Last 2 Weeks', value: 'last 2 weeks', daysBack: 14 },
+  { label: 'Last 3 Weeks', value: 'last 3 weeks', daysBack: 21 },
+  { label: 'Last 4 Weeks', value: 'last 4 weeks', daysBack: 30 },
 ];
 
-export default function EmployeeVoiceCard({ comments }) {
+export default function EmployeeVoiceCard({ dateFrom = null, dateTo = null, department = null }) {
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedPeriod, setSelectedPeriod] = useState('last 4 weeks');
 
-  const fetchAnalysis = async (period) => {
-    if (!comments || comments.length === 0) {
-      setAnalysis(null);
-      return;
+  const getDateRange = (period) => {
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];
+    
+    if (period === 'today') {
+      return { from: todayStr, to: todayStr };
+    }
+    
+    const periodObj = periods.find(p => p.value === period);
+    if (!periodObj) {
+      return { from: dateFrom, to: dateTo };
     }
 
+    const fromDate = new Date(today);
+    fromDate.setDate(fromDate.getDate() - periodObj.daysBack);
+    const fromStr = fromDate.toISOString().split('T')[0];
+    
+    return { from: fromStr, to: todayStr };
+  };
+
+  const fetchAnalysis = async (period) => {
     setLoading(true);
     try {
-      const result = await vibeAnalysisApi.analyzeComments(comments, period);
+      const range = dateFrom && dateTo
+        ? { from: dateFrom, to: dateTo }
+        : getDateRange(period);
+
+      const result = await vibeAnalysisApi.analyzeComments(range.from, range.to, department);
       setAnalysis(result);
     } catch (err) {
       console.error(err);
       toast.error('Failed to analyze comments');
+      setAnalysis(null);
     } finally {
       setLoading(false);
     }
@@ -35,7 +55,7 @@ export default function EmployeeVoiceCard({ comments }) {
 
   useEffect(() => {
     fetchAnalysis(selectedPeriod);
-  }, [comments, selectedPeriod]);
+  }, [selectedPeriod, department, dateFrom, dateTo]);
 
   return (
     <div className="card p-5">
