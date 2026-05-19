@@ -41,7 +41,9 @@ function TrendChart({ data }) {
               <span className="text-[9px] text-gray-400">{d.avgMood.toFixed(1)}</span>
               <div
                 className={`w-7 ${meta.bar} rounded-t-sm`}
-                style={{ height: `${Math.max(pct, 4)}%`, maxHeight: '100px' }}
+                style={{
+                  height: `${Math.max((Number(d.avgMood) / 5) * 100, 10)}px`
+                }}
                 title={`${label}: ${d.avgMood} (${d.responseCount} responses)`}
               />
               <span className="text-[9px] text-gray-500 text-center">{label}</span>
@@ -156,10 +158,13 @@ export default function VibeDashboardPage() {
       <div className="card p-5">
         <h2 className="text-base font-semibold text-gray-800 mb-4">30-Day Mood Trend</h2>
         <TrendChart data={summary.last30Days} />
+        {
+        console.log(summary)
+}
       </div>
 
       {/* Anonymous comments */}
-      {summary.anonymousComments?.length > 0 && (
+      {/* {summary.anonymousComments?.length > 0 && (
         <div className="card p-5">
           <h2 className="text-base font-semibold text-gray-800 mb-3">
             Today's Anonymous Thoughts
@@ -175,7 +180,7 @@ export default function VibeDashboardPage() {
             ))}
           </div>
         </div>
-      )}
+      )} */}
 
     </div>
   )

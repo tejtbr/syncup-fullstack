@@ -122,15 +122,19 @@ export default function AdminVibePage() {
           <div className="overflow-x-auto">
             <div className="flex items-end gap-1.5 min-w-max pb-2" style={{ height:'130px' }}>
               {summary.last30Days.map((d, i) => {
-                const pct = (d.avgMood / 5) * 100
+                const pct = (Number(d.avgMood) / 5) * 100
                 const m   = meta(d.avgMood)
-                const lbl = new Date(d.date).toLocaleDateString('en-IN', { day:'numeric', month:'short' })
+                const lbl = new Date(d.date + 'T00:00:00').toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })
                 return (
                   <div key={i} className="flex flex-col items-center gap-1" style={{ minWidth:'38px' }}>
                     <span className="text-[9px] text-gray-400">{d.avgMood.toFixed(1)}</span>
-                    <div className={`w-6 ${m.bar} rounded-t-sm`}
-                      style={{ height:`${Math.max(pct, 4)}%`, maxHeight:'90px' }}
-                      title={`${lbl}: ${d.avgMood} avg`} />
+                    <div
+                        className={`w-6 ${m.bar} rounded-t-sm`}
+                        style={{
+                          height: `${Math.max((Number(d.avgMood) / 5) * 90, 8)}px`
+                        }}
+                        title={`${lbl}: ${d.avgMood} avg`}
+                      />
                     <span className="text-[9px] text-gray-500 text-center">{lbl}</span>
                   </div>
                 )
