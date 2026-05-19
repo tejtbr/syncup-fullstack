@@ -30,11 +30,11 @@ public class IdeaService {
             .orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
 
         Idea idea = Idea.builder()
-            .submittedBy(user)
-            .title(req.getTitle().trim())
-            .description(req.getDescription().trim())
-            .category(req.getCategory() != null ? req.getCategory() : "Other")
-            .build();
+                .title(req.getTitle().trim())
+                .description(req.getDescription().trim())
+                .category(req.getCategory() != null ? req.getCategory().trim() : "Other")
+                .submittedBy(user)
+                .build();
 
         ideaRepo.save(idea);
         log.info("Idea submitted by {} : {}", user.getEmail(), idea.getTitle());
@@ -76,7 +76,7 @@ public class IdeaService {
 
     // ── Admin: update status + response ─────────────────────────────────────
     @Transactional
-    public IdeaDtos.IdeaResponse adminRespond(UUID ideaId, UUID adminId, IdeaDtos.AdminResponseRequest req) {
+    public IdeaDtos.IdeaResponse adminRespond(UUID ideaId, UUID adminId, IdeaDtos.AdminUpdateRequest req) {
         User admin = userRepo.findById(adminId)
             .orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
 

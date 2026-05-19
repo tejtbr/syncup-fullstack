@@ -29,6 +29,12 @@ public class IdeaDtos {
         private String adminResponse;
     }
 
+    @Data
+    public static class AdminUpdateRequest {
+        private Idea.IdeaStatus status;
+        private String adminResponse;
+    }
+
     @Data @Builder @NoArgsConstructor @AllArgsConstructor
     public static class IdeaResponse {
         private UUID id;

@@ -52,6 +52,7 @@ public class RedisConfig {
         Map<String, RedisCacheConfiguration> cacheConfigs = new HashMap<>();
         cacheConfigs.put("teamDashboard", defaultConfig.entryTtl(Duration.ofMinutes(2)));
         cacheConfigs.put("officeLocations", defaultConfig.entryTtl(Duration.ofHours(1)));
+//        cacheConfigs.put("leaderboard", defaultConfig.entryTtl(Duration.ofMinutes(10)));
 
         return RedisCacheManager.builder(factory)
             .cacheDefaults(defaultConfig)

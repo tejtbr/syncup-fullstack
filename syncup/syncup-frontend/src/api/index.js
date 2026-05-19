@@ -127,9 +127,9 @@ export const adminApi = {
 export const vibeAnalysisApi = {
   // Analyze comments with date range and optional department filter
   analyzeComments: (dateFrom, dateTo, department = null) =>
-    vibeApi.post('/api/vibe/analyze-comments', { 
-      dateFrom, 
-      dateTo, 
+    vibeApi.post('/api/vibe/analyze-comments', {
+      dateFrom,
+      dateTo,
       department,
       period: `from ${dateFrom} to ${dateTo}`
     }).then(r => r.data.data),
@@ -151,4 +151,6 @@ export const ideasApi = {
     api.patch(`/api/ideas/${id}/respond`, data).then(r => r.data.data),
   delete: (id) =>
     api.delete(`/api/ideas/${id}`),
+  getLeaderboard: () =>
+    api.get('/api/ideas/leaderboard').then(r => r.data.data),
 };
