@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { vibeApiCalls } from '../../api'
 import toast from 'react-hot-toast'
+import EmployeeVoiceCard from '../../components/admin/EmployeeVoiceCard'
 
 const MOOD = {
   5: { label:'Thriving',   emoji:'😄', color:'text-emerald-600', bg:'bg-emerald-50',  bar:'bg-emerald-500' },
@@ -144,7 +145,8 @@ export default function AdminVibePage() {
         </div>
       )}
 
-      {/* Anonymous comments */}
+      {/* Employee Voice — AI Comment Analysis */}
+      <EmployeeVoiceCard comments={summary.anonymousComments} />
       {summary.anonymousComments?.length > 0 && (
         <div className="card p-5">
           <h2 className="text-base font-semibold text-gray-800 mb-1">Anonymous Comments Today</h2>

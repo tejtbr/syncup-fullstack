@@ -122,6 +122,12 @@ export const adminApi = {
     api.delete(`/api/admin/locations/${id}`),
 };
 
+// --- Vibe Analysis API (Admin only) ---
+export const vibeAnalysisApi = {
+  analyzeComments: (comments) =>
+    api.post('/api/admin/vibe/analyze-comments', { comments }).then(r => r.data.data),
+};
+
 // --- Ideas API ---
 export const ideasApi = {
   getAll: () =>

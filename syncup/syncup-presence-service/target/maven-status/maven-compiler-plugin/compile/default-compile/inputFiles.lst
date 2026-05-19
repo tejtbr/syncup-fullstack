@@ -9,6 +9,7 @@
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/model/IdeaUpvote.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/config/WebSocketConfig.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/service/IdeaService.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/controller/VibeAnalysisController.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/dto/OfficeLocationDto.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/controller/AuthController.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/controller/TeamController.java
@@ -27,6 +28,7 @@
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/websocket/StatusWebSocketPublisher.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/model/Team.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/dto/StatusDtos.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/dto/CommentAnalysisDtos.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/model/UserStatus.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/PresenceServiceApplication.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/service/AuthService.java
@@ -34,6 +36,7 @@
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/model/TeamMember.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/dto/IdeaDtos.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/controller/AdminController.java
+/home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/service/CommentAnalysisService.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/security/UserDetailsServiceImpl.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/config/SecurityConfig.java
 /home/tejas/Documents/Pers projects/syncup-phase1/syncup/syncup-presence-service/src/main/java/com/syncup/presence/repository/OfficeLocationRepository.java
