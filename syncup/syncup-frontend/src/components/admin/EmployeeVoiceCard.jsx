@@ -2,47 +2,18 @@ import { useEffect, useState } from 'react';
 import { vibeAnalysisApi } from '../../api';
 import toast from 'react-hot-toast';
 
-const periods = [
-  { label: 'Today', value: 'today', dateFrom: null, dateTo: null }, // Will be set dynamically
-  { label: 'Last 1 Week', value: 'last 1 week', daysBack: 7 },
-  { label: 'Last 2 Weeks', value: 'last 2 weeks', daysBack: 14 },
-  { label: 'Last 3 Weeks', value: 'last 3 weeks', daysBack: 21 },
-  { label: 'Last 4 Weeks', value: 'last 4 weeks', daysBack: 30 },
-];
-
 export default function EmployeeVoiceCard({ dateFrom = null, dateTo = null, department = null }) {
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [selectedPeriod, setSelectedPeriod] = useState('last 4 weeks');
 
-  const getDateRange = (period) => {
-    const today = new Date();
-    const todayStr = today.toISOString().split('T')[0];
-    
-    if (period === 'today') {
-      return { from: todayStr, to: todayStr };
-    }
-    
-    const periodObj = periods.find(p => p.value === period);
-    if (!periodObj) {
-      return { from: dateFrom, to: dateTo };
+  const fetchAnalysis = async () => {
+    if (!dateFrom || !dateTo) {
+      return;
     }
 
-    const fromDate = new Date(today);
-    fromDate.setDate(fromDate.getDate() - periodObj.daysBack);
-    const fromStr = fromDate.toISOString().split('T')[0];
-    
-    return { from: fromStr, to: todayStr };
-  };
-
-  const fetchAnalysis = async (period) => {
     setLoading(true);
     try {
-      const range = dateFrom && dateTo
-        ? { from: dateFrom, to: dateTo }
-        : getDateRange(period);
-
-      const result = await vibeAnalysisApi.analyzeComments(range.from, range.to, department);
+      const result = await vibeAnalysisApi.analyzeComments(dateFrom, dateTo, department);
       setAnalysis(result);
     } catch (err) {
       console.error(err);
@@ -54,8 +25,8 @@ export default function EmployeeVoiceCard({ dateFrom = null, dateTo = null, depa
   };
 
   useEffect(() => {
-    fetchAnalysis(selectedPeriod);
-  }, [selectedPeriod, department, dateFrom, dateTo]);
+    fetchAnalysis();
+  }, [department, dateFrom, dateTo]);
 
   return (
     <div className="card p-5">
@@ -67,22 +38,6 @@ export default function EmployeeVoiceCard({ dateFrom = null, dateTo = null, depa
           </p>
         </div>
         <span className="text-xs font-semibold text-blue-600">Admin only</span>
-      </div>
-
-      {/* Time Period Selector */}
-      <div className="flex flex-wrap gap-2 mb-5">
-        {periods.map((period) => (
-          <button
-            key={period.value}
-            onClick={() => setSelectedPeriod(period.value)}
-            className={`px-4 py-1.5 text-xs font-medium rounded-full transition-all
-              ${selectedPeriod === period.value 
-                ? 'bg-blue-600 text-white shadow' 
-                : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
-          >
-            {period.label}
-          </button>
-        ))}
       </div>
 
       {loading && <div className="text-center py-8">Analyzing comments with AI...</div>}
